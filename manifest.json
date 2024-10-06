@@ -32,5 +32,12 @@
   "action": {
     "default_icon": "images/neoexs.png",
     "default_title": "NeoExamShield"
+  },
+  "web_accessible_resources": [
+  {
+    "resources": ["assets/*"],
+    "matches": ["<all_urls>"]
   }
+]
+
 }
