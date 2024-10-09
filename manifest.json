@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NeoExamShield",
-  "version": "1.2.0",
+  "version": "0.0.7",
   "description": "To prevent malpractice, identifies and blocks third-party browser extensions during tests on the Iamneo portal.",
   "permissions": [
     "storage",
@@ -28,16 +28,24 @@
     }
   },
   "icons": {
-    "48": "images/neoexs.png"
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
   },
   "action": {
-    "default_icon": "images/neoexs.png",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    },
     "default_title": "NeoExamShield"
   },
+  
   "web_accessible_resources": [
     {
       "resources": ["assets/*"],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+  "version_name": "Release Version"
 }
