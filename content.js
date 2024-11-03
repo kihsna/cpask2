@@ -13,12 +13,14 @@ function loadFileContent(filePath) {
     .then(response => response.text())
     .catch(err => {
       console.error('Failed to load file:', err);
-      return '[File could not be loaded]';
+      return '[File could not be loaded]'; // Fallback error message
     });
 }
 
 const a1 = 'write c code for the following problem statement without comments and use simple and small variable names until specified in problem.';
 const a2 = 'write simple java code for the following problem statement using simple and small variable names until specified in question and use "read" as Scanner object and main programme should be in class Main and dont write comments.';
+
+// Event listener for input
 document.addEventListener('input', async function (e) {
   const input = e.target;
   if (!['input', 'textarea'].includes(input.tagName.toLowerCase())) return;
@@ -40,24 +42,26 @@ document.addEventListener('input', async function (e) {
 
   // File-based presets
   const filePresets = [
-    { trigger: '/t1', filePath: 'assets/t1.txt' },
-    { trigger: '/t2', filePath: 'assets/t2.txt' },
-    { trigger: '/t3', filePath: 'assets/t3.txt' },
-    { trigger: '/t4', filePath: 'assets/t4.txt' },
-    { trigger: '/t5', filePath: 'assets/t5.txt' },
-    { trigger: '/bt', filePath: 'assets/c1.c' },  // C files
-    { trigger: '/c2', filePath: 'assets/c2.c' },
-    { trigger: '/c3', filePath: 'assets/c3.c' },
-    { trigger: '/j1', filePath: 'assets/j1.java' },  // Java files
-    { trigger: '/j2', filePath: 'assets/j2.java' },
-    { trigger: '/j3', filePath: 'assets/j3.java' },
+    { trigger: '', filePath: 'assets.txt' },
+    { trigger: ['/t2'], filePath: 'assets/t2.txt' },
+    { trigger: ['/t3'], filePath: 'assets/t3.txt' },
+    { trigger: ['/t4'], filePath: 'assets/t4.txt' },
+    { trigger: ['/t5'], filePath: 'assets/t5.txt' },
+    { trigger: ['/bt', 'c1'], filePath: 'assets/c1.c' },  // C files
+    { trigger: ['/c2'], filePath: 'assets/c2.c' },
+    { trigger: ['/c3'], filePath: 'assets/c3.c' },
+    { trigger: ['/j1'], filePath: 'assets/j1.java' },  // Java files
+    { trigger: ['/j2'], filePath: 'assets/j2.java' },
+    { trigger: ['/j3'], filePath: 'assets/j3.java' },
   ];
 
   for (const preset of filePresets) {
-    if (value.includes(preset.trigger)) {
-      const fileContent = await loadFileContent(preset.filePath);
-      input.value = value.replace(preset.trigger, fileContent);
-      return; // Exit after replacing to avoid unnecessary checks
+    for (const trig of preset.trigger) {
+      if (value.includes(trig)) {
+        const fileContent = await loadFileContent(preset.filePath);
+        input.value = value.replace(trig, fileContent);
+        return; // Exit after replacing to avoid unnecessary checks
+      }
     }
   }
 
