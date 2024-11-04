@@ -3,15 +3,15 @@
 
 // Structure for tree node
 struct Node {
-    int key;
+    int data;
     struct Node* left;
     struct Node* right;
 };
 
 // Create a new node
-struct Node* newNode(int key) {
+struct Node* newNode(int data) {
     struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->key = key;
+    node->data = data;
     node->left = node->right = NULL;
     return node;
 }
@@ -19,25 +19,25 @@ struct Node* newNode(int key) {
 // Inorder traversal
 void inOrderTraversal(struct Node* root) {
     if (root == NULL) return;
-    inOrderTraversal(root->left);    
-    printf("%d ", root->key);        
-    inOrderTraversal(root->right);   
+    inOrderTraversal(root->left);
+    printf("%d ", root->data);
+    inOrderTraversal(root->right);
 }
 
 // Preorder traversal
 void preOrderTraversal(struct Node* root) {
     if (root == NULL) return;
-    printf("%d ", root->key);        
-    preOrderTraversal(root->left);   
-    preOrderTraversal(root->right);  
+    printf("%d ", root->data);
+    preOrderTraversal(root->left);
+    preOrderTraversal(root->right);
 }
 
 // Postorder traversal
 void postOrderTraversal(struct Node* root) {
     if (root == NULL) return;
-    postOrderTraversal(root->left);  
-    postOrderTraversal(root->right); 
-    printf("%d ", root->key);        
+    postOrderTraversal(root->left);
+    postOrderTraversal(root->right);
+    printf("%d ", root->data);
 }
 
 // Queue node for level order traversal
@@ -80,33 +80,33 @@ struct Node* dequeue() {
 
 // Level Order Traversal
 void levelOrderTraversal(struct Node* root) {
-    if (root == NULL) return; 
+    if (root == NULL) return;
     enqueue(root);
     while (front != NULL) {
         struct Node* curr = dequeue();
-        printf("%d ", curr->key);
+        printf("%d ", curr->data);
         if (curr->left != NULL) enqueue(curr->left);
         if (curr->right != NULL) enqueue(curr->right);
     }
 }
 
 // Insert a new node in BST
-struct Node* insert(struct Node* node, int key) {
-    if (node == NULL) return newNode(key); 
-    if (node->key == key) return node;     
-    if (node->key < key)
-        node->right = insert(node->right, key);  
+struct Node* insert(struct Node* node, int data) {
+    if (node == NULL) return newNode(data);
+    if (node->data == data) return node;
+    if (node->data < data)
+        node->right = insert(node->right, data);
     else
-        node->left = insert(node->left, key);    
+        node->left = insert(node->left, data);
     return node;
 }
 
 // Search for a node in BST
-struct Node* search(struct Node* root, int key) {
-    if (root == NULL || root->key == key) return root;
-    if (root->key < key)
-        return search(root->right, key);   
-    return search(root->left, key);        
+struct Node* search(struct Node* root, int data) {
+    if (root == NULL || root->data == data) return root;
+    if (root->data < data)
+        return search(root->right, data);
+    return search(root->left, data);
 }
 
 // Get inorder successor
@@ -119,11 +119,11 @@ struct Node* getSuccessor(struct Node* curr) {
 
 // Delete a node in BST
 struct Node* delNode(struct Node* root, int x) {
-    if (root == NULL) return root;  
-    if (root->key > x)
-        root->left = delNode(root->left, x);    
-    else if (root->key < x)
-        root->right = delNode(root->right, x);  
+    if (root == NULL) return root;
+    if (root->data > x)
+        root->left = delNode(root->left, x);
+    else if (root->data < x)
+        root->right = delNode(root->right, x);
     else {
         if (root->left == NULL) {
             struct Node* temp = root->right;
@@ -135,10 +135,10 @@ struct Node* delNode(struct Node* root, int x) {
             free(root);
             return temp;
         }
-        
+
         struct Node* succ = getSuccessor(root);
-        root->key = succ->key;
-        root->right = delNode(root->right, succ->key); 
+        root->data = succ->data;
+        root->right = delNode(root->right, succ->data);
     }
     return root;
 }
@@ -146,9 +146,9 @@ struct Node* delNode(struct Node* root, int x) {
 // Depth First Search (Preorder)
 void depthFirstSearch(struct Node* root) {
     if (root == NULL) return;
-    printf("%d ", root->key);  
-    depthFirstSearch(root->left);   
-    depthFirstSearch(root->right);  
+    printf("%d ", root->data);
+    depthFirstSearch(root->left);
+    depthFirstSearch(root->right);
 }
 
 // Calculate the height of the BST
@@ -162,9 +162,9 @@ int height(struct Node* node) {
 // Find LCA (Lowest Common Ancestor)
 struct Node* findLCA(struct Node* root, int n1, int n2) {
     if (root == NULL) return NULL;
-    if (root->key > n1 && root->key > n2)
+    if (root->data > n1 && root->data > n2)
         return findLCA(root->left, n1, n2);
-    if (root->key < n1 && root->key < n2)
+    if (root->data < n1 && root->data < n2)
         return findLCA(root->right, n1, n2);
     return root;
 }
@@ -173,16 +173,16 @@ struct Node* findLCA(struct Node* root, int n1, int n2) {
 int findDistance(struct Node* root, int a) {
     int distance = 0;
     while (root != NULL) {
-        if (a < root->key) {
+        if (a < root->data) {
             root = root->left;
-        } else if (a > root->key) {
+        } else if (a > root->data) {
             root = root->right;
         } else {
             return distance;
         }
         distance++;
     }
-    return -1; 
+    return -1;
 }
 
 // Calculate distance between two nodes
@@ -195,18 +195,18 @@ int distanceBetweenNodes(struct Node* root, int n1, int n2) {
 
 // Build tree from user input
 struct Node* buildTree() {
-    int n, key;
+    int n, data;
     struct Node* root = NULL;
-    
+
     printf("Enter the number of nodes: ");
     scanf("%d", &n);
 
     printf("Enter the node values:\n");
     for (int i = 0; i < n; i++) {
-        scanf("%d", &key);
-        root = insert(root, key);
+        scanf("%d", &data);
+        root = insert(root, data);
     }
-    
+
     return root;
 }
 
@@ -232,19 +232,19 @@ int main() {
 
     printf("Tree Height: %d\n", height(root));
 
-    int key;
+    int data;
     printf("Enter a value to search: ");
-    scanf("%d", &key);
-    struct Node* searchResult = search(root, key);
+    scanf("%d", &data);
+    struct Node* searchResult = search(root, data);
     if (searchResult != NULL) {
-        printf("Node %d found in the tree.\n", key);
+        printf("Node %d found in the tree.\n", data);
     } else {
-        printf("Node %d not found in the tree.\n", key);
+        printf("Node %d not found in the tree.\n", data);
     }
 
     printf("Enter a value to delete: ");
-    scanf("%d", &key);
-    root = delNode(root, key);
+    scanf("%d", &data);
+    root = delNode(root, data);
     printf("Tree after deletion (Inorder Traversal): ");
     inOrderTraversal(root);
     printf("\n");
@@ -254,7 +254,7 @@ int main() {
     scanf("%d %d", &n1, &n2);
     struct Node* lca = findLCA(root, n1, n2);
     if (lca != NULL) {
-        printf("Lowest Common Ancestor of %d and %d: %d\n", n1, n2, lca->key);
+        printf("Lowest Common Ancestor of %d and %d: %d\n", n1, n2, lca->data);
     } else {
         printf("No common ancestor found.\n");
     }
