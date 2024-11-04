@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
 // Structure for tree node
 struct Node {
     int data;
@@ -15,6 +17,39 @@ struct Node* newNode(int data) {
     node->left = node->right = NULL;
     return node;
 }
+
+// Insert a new node in BST
+struct Node* insert(struct Node* node, int data) {
+    if (node == NULL) return newNode(data);
+    if (node->data == data) return node;
+    if (node->data < data)
+        node->right = insert(node->right, data);
+    else
+        node->left = insert(node->left, data);
+    return node;
+}
+
+// Build tree from user input
+struct Node* buildTree() {
+    int n, data;
+    struct Node* root = NULL;
+    
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Enter the node values:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &data);
+        root = insert(root, data);
+    }
+    
+    return root;
+}
+
+
+
+
+
 
 // Inorder traversal
 void inOrderTraversal(struct Node* root) {
@@ -40,7 +75,96 @@ void postOrderTraversal(struct Node* root) {
     printf("%d ", root->data);
 }
 
-// Queue node for level order traversal
+
+
+
+
+
+// Search for a node in BST
+struct Node* search(struct Node* root, int data) {
+    if (root == NULL || root->data == data) return root;
+    if (root->data < data)
+        return search(root->right, data);
+    return search(root->left, data);
+}
+
+// Get inorder successor
+struct Node* getSuccessor(struct Node* curr) {
+    curr = curr->right;
+    while (curr != NULL && curr->left != NULL)
+        curr = curr->left;
+    return curr;
+}
+
+// Delete a node in BST
+struct Node* delNode(struct Node* root, int x) {
+    if (root == NULL) return root;
+    if (root->data > x)
+        root->left = delNode(root->left, x);
+    else if (root->data < x)
+        root->right = delNode(root->right, x);
+    else {
+        if (root->left == NULL) {
+            struct Node* temp = root->right;
+            free(root);
+            return temp;
+        }
+        if (root->right == NULL) {
+            struct Node* temp = root->left;
+            free(root);
+            return temp;
+        }
+        struct Node* succ = getSuccessor(root);
+        root->data = succ->data;
+        root->right = delNode(root->right, succ->data);
+    }
+    return root;
+}
+
+// Depth First Search (Preorder)
+void depthFirstSearch(struct Node* root) {
+    if (root == NULL) return;
+    printf("%d ", root->data);
+    depthFirstSearch(root->left);
+    depthFirstSearch(root->right);
+}
+
+
+////SIMPLE LEVEL ORDER
+
+
+// Calculate the height of the tree
+int height(struct Node* node) {
+    if (node == NULL) return 0;
+    int leftHeight = height(node->left);
+    int rightHeight = height(node->right);
+    return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+}
+
+// Print nodes at a given level
+void printLevel(struct Node* root, int level) {
+    if (root == NULL) return;
+    if (level == 1) {
+        printf("%d ", root->data);
+    } else if (level > 1) {
+        printLevel(root->left, level - 1);
+        printLevel(root->right, level - 1);
+    }
+}
+
+// Simplified Level Order Traversal using recursion
+void levelOrder(struct Node* root) {
+    int h = height(root);
+    for (int i = 1; i <= h; i++) {
+        printLevel(root, i);
+    }
+}
+
+
+///// LEVEL  ORDER  USING  QNODE
+
+
+// Queue node for level order traversal (alternative implementation)
 struct QNode {
     struct Node *tNode;
     struct QNode *next;
@@ -78,7 +202,7 @@ struct Node* dequeue() {
     return tNode;
 }
 
-// Level Order Traversal
+// Alternative Level Order Traversal using Queue
 void levelOrderTraversal(struct Node* root) {
     if (root == NULL) return;
     enqueue(root);
@@ -90,74 +214,12 @@ void levelOrderTraversal(struct Node* root) {
     }
 }
 
-// Insert a new node in BST
-struct Node* insert(struct Node* node, int data) {
-    if (node == NULL) return newNode(data);
-    if (node->data == data) return node;
-    if (node->data < data)
-        node->right = insert(node->right, data);
-    else
-        node->left = insert(node->left, data);
-    return node;
-}
 
-// Search for a node in BST
-struct Node* search(struct Node* root, int data) {
-    if (root == NULL || root->data == data) return root;
-    if (root->data < data)
-        return search(root->right, data);
-    return search(root->left, data);
-}
 
-// Get inorder successor
-struct Node* getSuccessor(struct Node* curr) {
-    curr = curr->right;
-    while (curr != NULL && curr->left != NULL)
-        curr = curr->left;
-    return curr;
-}
 
-// Delete a node in BST
-struct Node* delNode(struct Node* root, int x) {
-    if (root == NULL) return root;
-    if (root->data > x)
-        root->left = delNode(root->left, x);
-    else if (root->data < x)
-        root->right = delNode(root->right, x);
-    else {
-        if (root->left == NULL) {
-            struct Node* temp = root->right;
-            free(root);
-            return temp;
-        }
-        if (root->right == NULL) {
-            struct Node* temp = root->left;
-            free(root);
-            return temp;
-        }
 
-        struct Node* succ = getSuccessor(root);
-        root->data = succ->data;
-        root->right = delNode(root->right, succ->data);
-    }
-    return root;
-}
+//// DISTANCE BETWEEN  NODES
 
-// Depth First Search (Preorder)
-void depthFirstSearch(struct Node* root) {
-    if (root == NULL) return;
-    printf("%d ", root->data);
-    depthFirstSearch(root->left);
-    depthFirstSearch(root->right);
-}
-
-// Calculate the height of the BST
-int height(struct Node* node) {
-    if (node == NULL) return -1;
-    int leftHeight = height(node->left);
-    int rightHeight = height(node->right);
-    return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
-}
 
 // Find LCA (Lowest Common Ancestor)
 struct Node* findLCA(struct Node* root, int n1, int n2) {
@@ -193,22 +255,13 @@ int distanceBetweenNodes(struct Node* root, int n1, int n2) {
     return d1 + d2;
 }
 
-// Build tree from user input
-struct Node* buildTree() {
-    int n, data;
-    struct Node* root = NULL;
 
-    printf("Enter the number of nodes: ");
-    scanf("%d", &n);
 
-    printf("Enter the node values:\n");
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &data);
-        root = insert(root, data);
-    }
 
-    return root;
-}
+
+
+
+
 
 // Main function
 int main() {
@@ -226,9 +279,14 @@ int main() {
     postOrderTraversal(root);
     printf("\n");
 
-    printf("Level Order Traversal: ");
-    levelOrderTraversal(root);
+    printf("Level Order Traversal (Recursive): ");
+    levelOrder(root);
     printf("\n");
+
+    // Uncomment this line if you want to use the queue-based level order traversal instead
+    // printf("Level Order Traversal (Queue-based): ");
+    // levelOrderTraversal(root);
+    // printf("\n");
 
     printf("Tree Height: %d\n", height(root));
 
