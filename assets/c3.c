@@ -60,118 +60,136 @@ fi
 FCFS non preemptive
 
 #include <stdio.h>
- int main() {
- int n;
- printf("Enter number of processes: ");
- scanf("%d", &n);
- int at[n], bt[n], ct[n], tat[n], wt[n];
- int i;
- printf("Enter arrival times for each process: \n");
- for (i = 0; i < n; i++) {
- printf("Arrival time for P%d: ", i+1);
- scanf("%d", &at[i]);
- }
- printf("Enter burst times for each process: \n");
- for (i = 0; i < n; i++) {
- printf("Burst time for P%d: ", i+1);
- scanf("%d", &bt[i]);
- }
- ct[0] = at[0] + bt[0];
- for (i = 1; i < n; i++) {
- if (at[i] > ct[i-1]) {
- ct[i] = at[i] + bt[i];
- } else {
- ct[i] = ct[i-1] + bt[i];
- }
- }
- for (i = 0; i < n; i++) {
- tat[i] = ct[i]-at[i];
- wt[i] = tat[i]-bt[i];
- }
-printf("\nP.No\tAT\tBT\tCT\tTAT\tWT\n");
- for (i = 0; i < n; i++) {
- printf("P%d\t%d\t%d\t%d\t%d\t%d\n", i+1, at[i], bt[i], ct[i],
- tat[i], wt[i]);
- }
- return 0;
- }
+
+int main() {
+    int n;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    int at[n], bt[n], ct[n], tat[n], wt[n];
+    
+    printf("Enter arrival times for each process:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Arrival time for P%d: ", i + 1);
+        scanf("%d", &at[i]);
+    }
+
+    printf("Enter burst times for each process:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Burst time for P%d: ", i + 1);
+        scanf("%d", &bt[i]);
+    }
+
+    ct[0] = at[0] + bt[0];
+    for (int i = 1; i < n; i++) {
+        if (at[i] > ct[i - 1]) {
+            ct[i] = at[i] + bt[i];
+        } else {
+            ct[i] = ct[i - 1] + bt[i];
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        tat[i] = ct[i] - at[i];
+        wt[i] = tat[i] - bt[i];
+    }
+
+    printf("\nP.No\tAT\tBT\tCT\tTAT\tWT\n");
+    for (int i = 0; i < n; i++) {
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\n", i + 1, at[i], bt[i], ct[i], tat[i], wt[i]);
+    }
+
+    return 0;
+}
+
 
 SJF preemptive
 
 
 
- #include <stdio.h>
- #define MAX 100
- void findWaitingTime(int processes[], int n, int bt[], int wt[], int at[])
- {
- int remaining_time[MAX], complete = 0, t = 0, minm = MAX;
- int shortest = 0, finish_time;
- int check = 0;
- for (int i = 0; i < n; i++)
- remaining_time[i] = bt[i];
- while (complete != n) {
- for (int j = 0; j < n; j++) {
- if ((at[j] <= t) && (remaining_time[j] < minm) &&
- remaining_time[j] > 0) {
- minm = remaining_time[j];
- shortest = j;
- check = 1;
- }
- }
- if (check == 0) {
- t++;
- continue;
- }
- remaining_time[shortest]--;
- minm = remaining_time[shortest];
- if (minm == 0)
- minm = MAX;
- if (remaining_time[shortest] == 0) {
-complete++;
- check = 0;
- finish_time = t + 1;
- wt[shortest] = finish_time-bt[shortest]-at[shortest];
- if (wt[shortest] < 0)
- wt[shortest] = 0;
- }
- t++;
- }
- }
- void findTurnAroundTime(int processes[], int n, int bt[], int wt[], int
- tat[]) {
- for (int i = 0; i < n; i++)
- tat[i] = bt[i] + wt[i];
- }
- void findAverageTime(int processes[], int n, int bt[], int at[]) {
- int wt[MAX], tat[MAX], total_wt = 0, total_tat = 0;
- findWaitingTime(processes, n, bt, wt, at);
- findTurnAroundTime(processes, n, bt, wt, tat);
- printf("Processes Burst Time Arrival Time Waiting Time
- Turnaround Time\n");
- for (int i = 0; i < n; i++) {
- total_wt += wt[i];
- total_tat += tat[i];
- printf(" %d %d %d %d
- %d\n", processes[i], bt[i], at[i], wt[i], tat[i]);
- }
- printf("\nAverage Waiting Time = %.2f", (float)total_wt / n);
- printf("\nAverage Turnaround Time = %.2f\n", (float)total_tat / n);
- }
- int main() {
- int n;
-printf("Enter the number of processes: ");
- scanf("%d", &n);
- int processes[n], burst_time[n], arrival_time[n];
- for (int i = 0; i < n; i++) {
- processes[i] = i + 1;
- printf("Enter burst time for process %d: ", i + 1);
- scanf("%d", &burst_time[i]);
- printf("Enter arrival time for process %d: ", i + 1);
- scanf("%d", &arrival_time[i]);
- }
- findAverageTime(processes, n, burst_time, arrival_time);
- return 0;
- }
+#include <stdio.h>
+#define MAX 100
+
+void findWaitingTime(int processes[], int n, int bt[], int wt[], int at[]) {
+    int remaining_time[MAX], complete = 0, t = 0, minm = MAX;
+    int shortest = 0, finish_time;
+    int check = 0;
+
+    for (int i = 0; i < n; i++) 
+        remaining_time[i] = bt[i];
+
+    while (complete != n) {
+        for (int j = 0; j < n; j++) {
+            if ((at[j] <= t) && (remaining_time[j] < minm) && remaining_time[j] > 0) {
+                minm = remaining_time[j];
+                shortest = j;
+                check = 1;
+            }
+        }
+
+        if (check == 0) {
+            t++;
+            continue;
+        }
+
+        remaining_time[shortest]--;
+        minm = remaining_time[shortest];
+
+        if (minm == 0) 
+            minm = MAX;
+
+        if (remaining_time[shortest] == 0) {
+            complete++;
+            check = 0;
+            finish_time = t + 1;
+            wt[shortest] = finish_time - bt[shortest] - at[shortest];
+            if (wt[shortest] < 0) 
+                wt[shortest] = 0;
+        }
+        t++;
+    }
+}
+
+void findTurnAroundTime(int processes[], int n, int bt[], int wt[], int tat[]) {
+    for (int i = 0; i < n; i++) 
+        tat[i] = bt[i] + wt[i];
+}
+
+void findAverageTime(int processes[], int n, int bt[], int at[]) {
+    int wt[MAX], tat[MAX], total_wt = 0, total_tat = 0;
+
+    findWaitingTime(processes, n, bt, wt, at);
+    findTurnAroundTime(processes, n, bt, wt, tat);
+
+    printf("Processes\tBurst Time\tArrival Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++) {
+        total_wt += wt[i];
+        total_tat += tat[i];
+        printf("P%d\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i], bt[i], at[i], wt[i], tat[i]);
+    }
+    printf("\nAverage Waiting Time = %.2f", (float)total_wt / n);
+    printf("\nAverage Turnaround Time = %.2f\n", (float)total_tat / n);
+}
+
+int main() {
+    int n;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    int processes[n], burst_time[n], arrival_time[n];
+    for (int i = 0; i < n; i++) {
+        processes[i] = i + 1;
+        printf("Enter burst time for process %d: ", i + 1);
+        scanf("%d", &burst_time[i]);
+        printf("Enter arrival time for process %d: ", i + 1);
+        scanf("%d", &arrival_time[i]);
+    }
+
+    findAverageTime(processes, n, burst_time, arrival_time);
+    return 0;
+}
+
+
 
 
 Banker’s algo
