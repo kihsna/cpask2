@@ -76,6 +76,26 @@ void postOrderTraversal(struct Node* root) {
 }
 
 
+//////INSERT LEVEL ORDER WITHOUT QUEUES
+
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+Node* insertLevelOrder(int arr[], int i, int n) {
+    Node* root = NULL;
+    if (i < n) {
+        root = createNode(arr[i]);
+        root->left = insertLevelOrder(arr, 2 * i + 1, n);
+        root->right = insertLevelOrder(arr, 2 * i + 2, n);
+    }
+    return root;
+}
+
+
 
 
 
