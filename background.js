@@ -8,7 +8,7 @@ function extractCode(response) {
 }
 
 function sendToGeminiAPI(inputText) {
-  const apiKey = 'AIzaSyAA6wzqc6XugvxjzCWhcV2LGdisJw0x-e0';
+  const apiKey = 'AIzaSyCKj9gdZ7dmF9OjCtaQf2jiKvn7elMEveo';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
   const data = {
@@ -61,5 +61,6 @@ chrome.runtime.onMessage.addListener((request) => {
     sendToGeminiAPI(request.text);
   }
 });
+
 
 
